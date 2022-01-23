@@ -11,12 +11,12 @@ select Hired_Candidates.First_Name,
 	order by Fellowship_Candidates.First_Name asc;
 
 select * from CPULogDatabse;
-select CPULogDatabse.user_name,
-	SUM(case when call.id is not null then 1 else 0 end) as calls,
-	AVG(isnull(CPULogDatabse.Cpu_Count, CPULogDatabse.Cpu_Working_Time),0)) as avg_diff
+select CPULogDatabse.Cpu_idle_Time,
+	SUM(case when CPULogDatabse.boot_time is not null then 1 else 0 end) as calls,
+	isnull(CPULogDatabse.Cpu_Count, CPULogDatabse.Cpu_Working_Time),0 as avg_diff
 	from CPULogDatabse
 group by 
 	CPULogDatabse.boot_time,
 	CPULogDatabse.technology
-having AVG(isnull(datediff(second, call.DateTime, call.DateTime),0))> (select avg(datediff(SECOND, call.DateTime, call.DateTime))from CPULogDatabse)
-order by calls asc, CPULogDatabse.user_name asc;
+having avg(isnull(datediff(second, CPULogDatabse.DateTime, CPULogDatabse.DateTime),0))> (select avg(datediff(SECOND, CPULogDatabse.DateTime, CPULogDatabse.DateTime))from CPULogDatabse)
+order by calls asc;
